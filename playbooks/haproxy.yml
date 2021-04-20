@@ -1,5 +1,5 @@
 ---
-- hosts: haservers
+- hosts: haserver
   become: yes
   gather_facts: true
   roles:
