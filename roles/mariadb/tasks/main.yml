@@ -1,7 +1,7 @@
 ---
-- name: latest mariadb version installed
+- name: latest mariadb version installed and depend
   dnf:
-    name: mariadb,mariadb-server
+    name: mariadb-server,python3-PyMySQL
     state: latest
 
 - name: mariadb enabled and running
