@@ -17,8 +17,10 @@
     state: enabled
 
 - name: Set the root user passwd
-  community.mysql.mysql_user:
-    host_all: true
+  mysql_user:
+    login_host: 'localhost'
+    login_user: 'root'
+    login_passwrd: ''
     name: "root"
     password: "{{ mysql_root_password }}"
     state: present
