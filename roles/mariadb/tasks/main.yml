@@ -28,7 +28,7 @@
 - name: create my.cnf with db credentials
   ansible.builtin.template:
   src: .my.cnf.j2
-  desk: /root/.my.cnf
+  dest: /root/.my.cnf
 
 - name: remove external access root accounts
   community.mysql.mysql_query:
