@@ -16,11 +16,10 @@
     permanent: yes
     state: enabled
 
-- name: Set the root user passwd
+- name: Set the root user password
   mysql_user:
-    login_host: 'localhost'
-    login_user: 'root'
-    login_passwrd: ''
+  community.mysql.mysql_user:
+    host_all: true
     name: "root"
     password: "{{ mysql_root_password }}"
     state: present
