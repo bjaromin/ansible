@@ -16,11 +16,30 @@
     permanent: yes
     state: enabled
 
-- name: set the root user passwd
+- name: Set the root user passwd
   mysql_user:
   community.mysql.mysql_user:
     host_all: true
     name: "root"
     password: "{{ mysql_root_password }}"
     state: present
-    
+
+- name: create my.cnf with db credentials
+  ansible.builtin.template:
+  src: .my.cnf.j2
+  desk: /root/.my.cnf
+
+- name: remove external access root accounts
+  community.mysql.mysql_query:
+    query: DELETE FROM mysql.user WHERE USER='root' AND HOST NOT IN ('localhost','127.0.0.1','::1')
+
+- name: remove all anonymous accounts
+  community.mysql.mysql_user:
+    name: ""
+    host_all: yes
+    state: absent
+
+- name: remove test db
+  community.mysql.mysql_db:
+    name: test
+    state: absent
