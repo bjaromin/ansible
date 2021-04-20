@@ -1,0 +1,15 @@
+---
+- name: latest mariadb version installed
+  dnf:
+      name: mariadb,mariadb-server
+      state: latest
+- name: mariadb enabled and running
+  service:
+      name: mariadb
+      enabled: true
+      state: started
+- name: open firewall
+  ansible.posix.firewalld:
+      service: mysql
+      permanent: yes
+      state: enabled

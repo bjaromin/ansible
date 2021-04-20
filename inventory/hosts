@@ -1,0 +1,11 @@
+[webservers]
+webserver
+## 192.168.54.3
+
+[dbservers]
+mariadb
+## 192.168.54.4
+
+[haserver]
+haproxy
+## 192.168.54.5
