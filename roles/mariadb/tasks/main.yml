@@ -3,13 +3,42 @@
   dnf:
       name: mariadb,mariadb-server
       state: latest
+
 - name: mariadb enabled and running
   service:
       name: mariadb
       enabled: true
       state: started
+
 - name: open firewall
   ansible.posix.firewalld:
       service: mysql
       permanent: yes
       state: enabled
+
+- name: Set the root user password
+  community.mysql.mysql_user:
+    host_all: true
+    name: "root"
+    password: "{{ mysql_root_password }}"
+    state: present
+
+- name: Create .my.cnf with database credentials
+  ansible.builtin.template:
+    src: .my.cnf.j2
+    dest: /root/.my.cnf
+
+- name: Remove non localhost root accounts
+  community.mysql.mysql_query:
+    query: DELETE FROM mysql.user WHERE USER='root' AND HOST NOT IN ('localhost','127.0.0.1','::1')
+
+- name: Remove all anonymous user accounts
+  community.mysql.mysql_user:
+    name: ""
+    host_all: yes
+    state: absent
+
+- name: Remove the test database
+  community.mysql.mysql_db:
+    name: test
+    state: absent
