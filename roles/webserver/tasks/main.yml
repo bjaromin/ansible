@@ -25,3 +25,35 @@
     src: github-id_rsa
     dest: /home/ansible/.ssh/github-id_rsa
   become_user: ansible
+
+- name: Set github ssh deploy key permissions
+  ansible.builtin.file: 
+    dest: /home/ansible/.ssh/github-id_rsa
+    mode: 0600
+  become_user: ansible
+
+- name: Add github.com to ssh known hosts
+  ansible.builtin.shell: ssh-keyscan -H github.com >> /etc/ssh/ssh_known_hosts
+
+- name: Clone test-app repository
+  ansible.builtin.git:
+    repo: git@github.com:bjaromin/test-app.git
+    dest: /home/ansible/test-app
+    key_file: /home/ansible/.ssh/github-id_rsa
+    accept_hostkey: yes
+    force: yes
+  become_user: ansible
+
+- name: Build docker image
+  ansible.builtin.shell:
+    cmd: /home/ansible/test-app/build.sh
+  args:
+    chdir: /home/ansible/test-app
+  become_user: ansible
+
+- name: Start docker container
+  ansible.builtin.shell:
+    cmd: /home/ansible/test-app/start.sh
+  args:
+    chdir: /home/ansible/test-app
+  become_user: ansible
