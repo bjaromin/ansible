@@ -9,3 +9,25 @@
     name: haproxy
     enabled: true
     state: started
+
+- name: open firewall port 80
+  ansible.posix.firewalld:
+    zone: public
+    port: 80/tcp
+    permanent: true
+    state: enabled
+
+- name: reload firewall
+  ansible.builtin.systemd:
+    name: firewalld
+    state: reloaded
+
+- name: upload haproxy.cfg
+  ansible.builtin.template:
+    src: haproxy.cfg
+    dest: /etc/haproxy/haproxy.cfg
+
+- name: restart haproxy
+  ansible.builtin.systemd:
+    name: haproxy
+    state: restarted
