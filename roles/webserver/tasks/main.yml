@@ -1,28 +1,27 @@
 ---
-- name: Latest apache version installed
+- name: install podman and git
   dnf:
-    name: httpd
+    name: podman,git
     state: latest
 
-- name: Apache enabled and running
-  service:
-    name: httpd
-    enabled: true
-    state: started
+- name: stop and remove test-app-container
+  ansible.builtin.shell:
+    cmd: docker stop test-app-container && docker rm test-app-container || /bin/true
+  become_user: ansible
 
-- name: install podman
-  dnf:
-    name: podman
-    state: latest
+- name: install nodejs v14.x
+  ansible.builtin.dnf:
+    name: "@nodejs:14"
+    state: present
 
-- name: enable codeready-builder repo
-  community.general.rhsm_repository:
-    name: codeready-builder-for-rhel-8-x86_64-rpms
-    state: enabled
+- name: Create .ssh dir
+  ansible.builtin.file:
+    path: /home/ansible/.ssh
+    state: directory
+  become_user: ansible
 
-- name: podman enabled and running
-  service:
-    name: podman
-    enabled: true
-    state: started
-
+- name: upload github ssh deploy keys
+  ansible.builtin.copy:
+    src: github-id_rsa
+    dest: /home/ansible/.ssh/github-id_rsa
+  become_user: ansible

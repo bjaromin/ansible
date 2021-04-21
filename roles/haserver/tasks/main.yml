@@ -3,3 +3,9 @@
   yum:
     name: haproxy
     state: latest
+
+- name: enable haproxy
+  service:
+    name: haproxy
+    enabled: true
+    state: started
