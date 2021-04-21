@@ -1,7 +1,7 @@
 ---
-- name: install podman and git
+- name: install docker and git
   dnf:
-    name: podman,git
+    name: docker,git
     state: latest
 
 - name: stop and remove test-app-container
