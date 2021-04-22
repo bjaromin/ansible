@@ -57,3 +57,15 @@
   args:
     chdir: /home/ansible/test-app
   become_user: ansible
+
+- name: open port 5000 in the firewall
+  ansible.posix.firewalld:
+    zone: public
+    port: 5000/tcp
+    permanent: true
+    state: enabled
+
+- name: reload firewall
+  ansible.builtin.systemd:
+    name: firewalld
+    state: reloaded
