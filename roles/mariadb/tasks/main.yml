@@ -1,6 +1,6 @@
 ---
 - name: latest mariadb version installed and depend
-  dnf:
+  ansible.builtin.dnf:
     name: mariadb-server,python3-PyMySQL
     state: latest
 
@@ -12,9 +12,15 @@
 
 - name: open firewall
   ansible.posix.firewalld:
-    service: mysql
-    permanent: yes
+    zone: public
+    port: 3306/tcp
+    permanent: true
     state: enabled
+
+- name: reload firewall
+  ansible.builtin.systemd:
+    name: firewalld
+    state: reloaded
 
 - name: Set the root user password
   community.mysql.mysql_user:
@@ -38,3 +44,17 @@
   community.mysql.mysql_db:
     name: test
     state: absent
+
+- name: create database app_db
+  community.mysql.mysql_db:
+    name: app_db
+    state: present
+
+- name: create user app_user
+  community.mysql.mysql_user:
+    host: webserver
+    name: app_user
+    password: "Chaslo0987"
+    state: present
+    priv:
+      "app_db.*": "ALL,GRANT"
