@@ -13,7 +13,9 @@
   ansible.builtin.dnf:
     name: "@nodejs:14"
     state: present
-
+#---------
+#Following tasks are used for cloning the repository from Github
+#---------
 - name: Create .ssh dir
   ansible.builtin.file:
     path: /home/ansible/.ssh
@@ -23,7 +25,7 @@
 - name: upload github ssh deploy keys
   ansible.builtin.copy:
     src: github-id_rsa
-    dest: /home/ansible/.ssh/github-id_rsa
+    dest: /home/ansible/.ssh/github-id_rsa  #TODO: name me better
   become_user: ansible
 
 - name: Set github ssh deploy key permissions
@@ -33,7 +35,7 @@
   become_user: ansible
 
 - name: Add github.com to ssh known hosts
-  ansible.builtin.shell: ssh-keyscan -H github.com >> /etc/ssh/ssh_known_hosts
+  ansible.builtin.shell: ssh-keyscan -H github.com >> /home/ansible/.ssh/known_hosts
 
 - name: Clone test-app repository
   ansible.builtin.git:

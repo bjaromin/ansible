@@ -22,6 +22,10 @@
     name: firewalld
     state: reloaded
 
+# -----
+# perform mysql_secure_installation tasks
+# https://dev.mysql.com/doc/refman/8.0/en/mysql-secure-installation.html
+# -----
 - name: Set the root user password
   community.mysql.mysql_user:
     host_all: true
@@ -44,6 +48,7 @@
   community.mysql.mysql_db:
     name: test
     state: absent
+#--------
 
 - name: create database app_db
   community.mysql.mysql_db:
